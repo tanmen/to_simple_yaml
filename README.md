@@ -23,6 +23,7 @@ Or install it yourself as:
 ## Usage
 Can use method to to_simple_yaml in Hash,Struct and Array class.
 ```ruby
+require 'to_simple_yaml'
 hash.to_simple_yaml
 ```
 
