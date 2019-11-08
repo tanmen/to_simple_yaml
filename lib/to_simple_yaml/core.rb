@@ -22,7 +22,7 @@ class Object
   def generate_yaml(obj, indent: 0, array: false)
     if obj.is_a?(Hash)
       yaml = ''
-      obj.keys.each_with_index do |key, index|
+      obj.compact.keys.each_with_index do |key, index|
         array_first = array && index == 0
         array_inline = array && index != 0
         if obj[key].is_a?(String) || obj[key].is_a?(Numeric)
@@ -40,7 +40,7 @@ class Object
       yaml
     elsif obj.is_a?(Array)
       yaml = ''
-      obj.each do |value|
+      obj.compact.each do |value|
         if value.is_a?(String) || value.is_a?(Numeric)
           yaml << template("- #{value}", indent)
         elsif value.is_a?(Symbol)

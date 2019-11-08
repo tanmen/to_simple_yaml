@@ -80,4 +80,14 @@ class ToSimpleYamlTest < Minitest::Test
                    "        two: 2\n",
                  yaml)
   end
+
+  def test_nil_hash
+    yaml = {one: nil, two: 2}.to_simple_yaml
+    assert_equal("two: 2\n", yaml)
+  end
+
+  def test_nil_array
+    yaml = [nil,2].to_simple_yaml
+    assert_equal("- 2\n", yaml)
+  end
 end
