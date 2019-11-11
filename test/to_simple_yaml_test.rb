@@ -90,4 +90,12 @@ class ToSimpleYamlTest < Minitest::Test
     yaml = [nil,2].to_simple_yaml
     assert_equal("- 2\n", yaml)
   end
+
+  def test_boolean
+    yaml = {yes: true}.to_simple_yaml
+    assert_equal("yes: true\n", yaml)
+    yaml = [true, false].to_simple_yaml
+    assert_equal("- true\n"+
+                   "- false\n", yaml)
+  end
 end
