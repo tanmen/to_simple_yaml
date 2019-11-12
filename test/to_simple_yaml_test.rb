@@ -104,5 +104,9 @@ class ToSimpleYamlTest < Minitest::Test
     assert_equal("test: '#test'\n", yaml)
     yaml = ['#test'].to_simple_yaml
     assert_equal("- '#test'\n", yaml)
+    yaml = {test: '*test'}.to_simple_yaml
+    assert_equal("test: '*test'\n", yaml)
+    yaml = ['*test'].to_simple_yaml
+    assert_equal("- '*test'\n", yaml)
   end
 end
