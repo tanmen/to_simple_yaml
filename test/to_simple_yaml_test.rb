@@ -99,7 +99,7 @@ class ToSimpleYamlTest < Minitest::Test
                    "- false\n", yaml)
   end
 
-  def test_start
+  def test_text_start
     yaml = {test: '#test'}.to_simple_yaml
     assert_equal("test: '#test'\n", yaml)
     yaml = ['#test'].to_simple_yaml
@@ -107,6 +107,13 @@ class ToSimpleYamlTest < Minitest::Test
     yaml = {test: '*test'}.to_simple_yaml
     assert_equal("test: '*test'\n", yaml)
     yaml = ['*test'].to_simple_yaml
+    assert_equal("- '*test'\n", yaml)
+  end
+
+  def test_key_start
+    yaml = {'*test': 'test'}.to_simple_yaml
+    assert_equal("'*test': test\n", yaml)
+    yaml = ['*test'.to_sym].to_simple_yaml
     assert_equal("- '*test'\n", yaml)
   end
 end

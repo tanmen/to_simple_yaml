@@ -25,17 +25,13 @@ class Object
       obj.compact.keys.each_with_index do |key, index|
         array_first = array && index == 0
         array_inline = array && index != 0
-        if obj[key].is_a?(String) && obj[key].start_with?('#', '*')
-          yaml << template("#{array_first ? '- ' : ''}#{key}: '#{obj[key]}'", array_inline ? indent + 1 : indent)
-        elsif obj[key].is_a?(String) || obj[key].is_a?(Numeric) || obj[key].is_a?(TrueClass) || obj[key].is_a?(FalseClass)
-          yaml << template("#{array_first ? '- ' : ''}#{key}: #{obj[key]}", array_inline ? indent + 1 : indent)
-        elsif obj[key].is_a?(Symbol)
-          yaml << template("#{array_first ? '- ' : ''}#{key}: #{obj[key].to_s}", array_inline ? indent + 1 : indent)
+        if obj[key].is_a?(String) || obj[key].is_a?(Symbol) || obj[key].is_a?(Numeric) || obj[key].is_a?(TrueClass) || obj[key].is_a?(FalseClass)
+          yaml << template("#{array_first ? '- ' : ''}#{text(key)}: #{text(obj[key])}", array_inline ? indent + 1 : indent)
         elsif obj[key].is_a?(Array)
-          yaml << template("#{array_first ? '- ' : ''}#{key}:", array_inline ? indent + 1 : indent)
+          yaml << template("#{array_first ? '- ' : ''}#{text(key)}:", array_inline ? indent + 1 : indent)
           yaml << generate_yaml(obj[key], indent: array_inline ? indent + 2 : indent + 1)
         else
-          yaml << template("#{array_first ? '- ' : ''}#{key}:", array_inline ? indent + 1 : indent)
+          yaml << template("#{array_first ? '- ' : ''}#{text(key)}:", array_inline ? indent + 1 : indent)
           yaml << generate_yaml(obj[key], indent: array_inline || array_first ? indent + 2 : indent + 1)
         end
       end
@@ -43,12 +39,8 @@ class Object
     elsif obj.is_a?(Array)
       yaml = ''
       obj.compact.each do |value|
-        if value.is_a?(String) && value.start_with?('#', '*')
-          yaml << template("- '#{value}'", indent)
-        elsif value.is_a?(String) || value.is_a?(Numeric) || value.is_a?(TrueClass) || value.is_a?(FalseClass)
-          yaml << template("- #{value}", indent)
-        elsif value.is_a?(Symbol)
-          yaml << template("- #{value.to_s}", indent)
+        if value.is_a?(String) || value.is_a?(Symbol) || value.is_a?(Numeric) || value.is_a?(TrueClass) || value.is_a?(FalseClass)
+          yaml << template("- #{text(value)}", indent)
         elsif value.is_a?(Array)
           yaml << template('-', indent)
           yaml << generate_yaml(value, indent: indent + 1)
@@ -66,6 +58,14 @@ class Object
 
   def template(value, indent)
     "#{[].fill('  ', 0...indent).join('')}#{value}\n"
+  end
+
+  def text(value)
+    if value.to_s.start_with?('#', '*')
+      "'#{value}'"
+    else
+      value
+    end
   end
 end
 
