@@ -25,7 +25,11 @@ class Object
       obj.compact.keys.each_with_index do |key, index|
         array_first = array && index == 0
         array_inline = array && index != 0
-        if obj[key].is_a?(String) || obj[key].is_a?(Symbol) || obj[key].is_a?(Numeric) || obj[key].is_a?(TrueClass) || obj[key].is_a?(FalseClass)
+        if obj[key].is_a?(String) && obj[key].match?(/\n/)
+          sentence = obj[key].split("\n").reject(&:empty?)
+          yaml << template("#{array_first ? '- ' : ''}#{text(key)}: |", array_inline ? indent + 1 : indent)
+          sentence.each {|s| yaml << template(s, array_inline ? indent + 2 : indent + 1)}
+        elsif obj[key].is_a?(String) || obj[key].is_a?(Symbol) || obj[key].is_a?(Numeric) || obj[key].is_a?(TrueClass) || obj[key].is_a?(FalseClass)
           yaml << template("#{array_first ? '- ' : ''}#{text(key)}: #{text(obj[key])}", array_inline ? indent + 1 : indent)
         elsif obj[key].is_a?(Array)
           yaml << template("#{array_first ? '- ' : ''}#{text(key)}:", array_inline ? indent + 1 : indent)
@@ -39,7 +43,11 @@ class Object
     elsif obj.is_a?(Array)
       yaml = ''
       obj.compact.each do |value|
-        if value.is_a?(String) || value.is_a?(Symbol) || value.is_a?(Numeric) || value.is_a?(TrueClass) || value.is_a?(FalseClass)
+        if value.is_a?(String) && value.match?(/\n/)
+          sentence = value.split("\n").reject(&:empty?)
+          yaml << template("- |", indent)
+          sentence.each{|s| yaml << template(s, indent + 1)}
+        elsif value.is_a?(String) || value.is_a?(Symbol) || value.is_a?(Numeric) || value.is_a?(TrueClass) || value.is_a?(FalseClass)
           yaml << template("- #{text(value)}", indent)
         elsif value.is_a?(Array)
           yaml << template('-', indent)

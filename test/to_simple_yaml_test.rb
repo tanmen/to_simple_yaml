@@ -116,4 +116,39 @@ class ToSimpleYamlTest < Minitest::Test
     yaml = ['*test'.to_sym].to_simple_yaml
     assert_equal("- '*test'\n", yaml)
   end
+
+  def test_multiline_text
+    yaml = {description: "this text is so long text.\n" +
+      "this text is so long text.\n" +
+      "this text is so long text.\n" +
+      "this text is so long text.\n" +
+      "this text is so long text.\n" +
+      "this text is so long text.\n" +
+      "this text is so long text.\n"
+    }.to_simple_yaml
+    assert_equal("description: |\n" +
+                   "  this text is so long text.\n" +
+                   "  this text is so long text.\n" +
+                   "  this text is so long text.\n" +
+                   "  this text is so long text.\n" +
+                   "  this text is so long text.\n" +
+                   "  this text is so long text.\n" +
+                   "  this text is so long text.\n", yaml)
+    yaml = ["this text is so long text.\n" +
+              "this text is so long text.\n" +
+              "this text is so long text.\n" +
+              "this text is so long text.\n" +
+              "this text is so long text.\n" +
+              "this text is so long text.\n" +
+              "this text is so long text.\n"
+    ].to_simple_yaml
+    assert_equal("- |\n" +
+                   "  this text is so long text.\n" +
+                   "  this text is so long text.\n" +
+                   "  this text is so long text.\n" +
+                   "  this text is so long text.\n" +
+                   "  this text is so long text.\n" +
+                   "  this text is so long text.\n" +
+                   "  this text is so long text.\n", yaml)
+  end
 end
