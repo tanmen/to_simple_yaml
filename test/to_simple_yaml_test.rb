@@ -151,4 +151,11 @@ class ToSimpleYamlTest < Minitest::Test
                    "  this text is so long text.\n" +
                    "  this text is so long text.\n", yaml)
   end
+
+  def test_one_line_text
+    yaml = {text: "text.\n"}.to_simple_yaml
+    assert_equal("text: text.\n", yaml)
+    yaml = ["text.\n"].to_simple_yaml
+    assert_equal("- text.\n", yaml)
+  end
 end
