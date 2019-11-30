@@ -167,5 +167,13 @@ class ToSimpleYamlTest < Minitest::Test
 
     yaml = [{}].to_simple_yaml
     assert_equal("- {}\n", yaml)
+    yaml = [{}, {}].to_simple_yaml
+    assert_equal("- {}\n" +
+                   "- {}\n", yaml)
+    yaml = [{Test: []}].to_simple_yaml
+    assert_equal("- Test: []\n", yaml)
+    yaml = [{Test: [], Test2: []}].to_simple_yaml
+    assert_equal("- Test: []\n" +
+                   "  Test2: []\n", yaml)
   end
 end

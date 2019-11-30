@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    to_simple_yaml (1.0.9)
+    to_simple_yaml (1.0.10)
 
 GEM
   remote: https://rubygems.org/

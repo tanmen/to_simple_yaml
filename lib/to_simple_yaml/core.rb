@@ -21,7 +21,7 @@ class Object
 
   def generate_yaml(obj, indent: 0, array: false)
     if obj.is_a?(Hash)
-      return template("#{array ? '- ' : ''}{}", indent) if obj.values.empty?
+      return template("#{array ? '- ' : ''}{}", indent) if obj.empty?
 
       yaml = ''
       obj.compact.keys.each_with_index do |key, index|
@@ -38,8 +38,12 @@ class Object
         elsif obj[key].is_a?(String) || obj[key].is_a?(Symbol) || obj[key].is_a?(Numeric) || obj[key].is_a?(TrueClass) || obj[key].is_a?(FalseClass)
           yaml << template("#{array_first ? '- ' : ''}#{text(key)}: #{text(obj[key])}", array_inline ? indent + 1 : indent)
         elsif obj[key].is_a?(Array)
-          yaml << template("#{array_first ? '- ' : ''}#{text(key)}:", array_inline ? indent + 1 : indent)
-          yaml << generate_yaml(obj[key], indent: array_inline ? indent + 2 : indent + 1)
+          if obj[key].empty?
+            yaml << template("#{array_first ? '- ' : ''}#{text(key)}: []", array_inline ? indent + 1 : indent)
+          else
+            yaml << template("#{array_first ? '- ' : ''}#{text(key)}:", array_inline ? indent + 1 : indent)
+            yaml << generate_yaml(obj[key], indent: array_inline ? indent + 2 : indent + 1)
+          end
         else
           yaml << template("#{array_first ? '- ' : ''}#{text(key)}:", array_inline ? indent + 1 : indent)
           yaml << generate_yaml(obj[key], indent: array_inline || array_first ? indent + 2 : indent + 1)
