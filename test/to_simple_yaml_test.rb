@@ -158,4 +158,14 @@ class ToSimpleYamlTest < Minitest::Test
     yaml = ["text.\n"].to_simple_yaml
     assert_equal("- text.\n", yaml)
   end
+
+  def test_no_values
+    yaml = [].to_simple_yaml
+    assert_equal("[]\n", yaml)
+    yaml = {}.to_simple_yaml
+    assert_equal("{}\n", yaml)
+
+    yaml = [{}].to_simple_yaml
+    assert_equal("- {}\n", yaml)
+  end
 end

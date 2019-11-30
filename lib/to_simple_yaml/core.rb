@@ -21,6 +21,8 @@ class Object
 
   def generate_yaml(obj, indent: 0, array: false)
     if obj.is_a?(Hash)
+      return template("#{array ? '- ' : ''}{}", indent) if obj.values.empty?
+
       yaml = ''
       obj.compact.keys.each_with_index do |key, index|
         array_first = array && index == 0
@@ -45,6 +47,8 @@ class Object
       end
       yaml
     elsif obj.is_a?(Array)
+      return template('[]', indent) if obj.empty?
+
       yaml = ''
       obj.compact.each do |value|
         if value.is_a?(String) && value.include?("\n")
@@ -77,7 +81,7 @@ class Object
   end
 
   def text(value)
-    if value.to_s.start_with?('#', '*')
+    if value.to_s.start_with?('#', '*', '[', '{')
       "'#{value}'"
     else
       value
